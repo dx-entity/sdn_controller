@@ -62,6 +62,9 @@ class MyDemo(app_manager.RyuApp):
 
         msg = ev.msg
 
+        device = self.gd.get_device(ev.msg.datapath.id)
+        if device:
+            device.handle_message(msg)
         PacketRouter.route_pkt(msg)
 
     @set_ev_cls(dpset.EventDP, MAIN_DISPATCHER)

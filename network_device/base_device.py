@@ -4,7 +4,7 @@ from abc import ABCMeta, abstractmethod
 class OFDevice(object):
     __metaclass__ = ABCMeta
 
-    TYPEPOOL=['switch2L', 'switch3L', 'router', 'firewall', 'ids', 'ips']
+    TYPEPOOL=['Switch2L', 'Switch3L', 'Router', 'Firewall', 'Ids', 'Ips']
 
     def __init__(self, dp, device_type):
         self.dpid = dp
@@ -15,6 +15,9 @@ class OFDevice(object):
 
     @abstractmethod
     def add_default_flow(self): pass
+
+    @abstractmethod
+    def handle_message(self):pass
 
 
 class TerminalDevice(object):

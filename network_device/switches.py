@@ -1,10 +1,15 @@
 import base_device
 
+from ryu.lib.packet import packet
+from ryu.lib.packet import ethernet
+from ryu.lib.packet import ether_types
 
-class SwitchL2(base_device.OFDevice):
+
+class Switch2L(base_device.OFDevice):
 
     def __init__(self, dp, device_type):
-        super(SwitchL2, self).__init__(dp, device_type)
+        super(Switch2L, self).__init__(dp, Switch2L.__name__)
+
         self.mac_table = {}
         self.port_table = {}
 
@@ -12,4 +17,8 @@ class SwitchL2(base_device.OFDevice):
         pass
 
     def add_default_flow(self):
+        pass
+
+    def handle_message(self, msg):
+
         pass
