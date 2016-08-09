@@ -71,6 +71,7 @@ class MyDemo(app_manager.RyuApp):
     def dp_connect_in(self, ev):
         dpid = dpid_lib.dpid_to_str(ev.dp.id)
         dp = ev.dp
+        # TODO: classify datapath and init object
         if ev.enter:
             self.gd.register_device(dpid, dp)
             self.logger.info("ovs has connected to controller, id: %s" % (dpid))

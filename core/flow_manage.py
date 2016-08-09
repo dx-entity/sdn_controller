@@ -57,7 +57,7 @@ def add_flow(datapath, priority, match, inst, table_id=0):
     datapath.send_msg(mod)
 
 
-class FlowManage():
+class FlowManage(object):
     _manage_type = {
         'add_default_flow': add_default_flow,
         'add_flow': add_flow
