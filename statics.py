@@ -13,3 +13,16 @@ class CONFIG(object):
     class CONTOLLER(object):
         SECTION_NAME = "controller"
         NAME = "name"
+    class NETWORK(object):
+        SECTION_NAME = "network"
+        TOPOFILE = "topofile"
+
+
+class TOPO(object):
+    class TAG(object):
+        HOST = "host"
+        SWITCH = "switch"
+        INTERFACE = "interface"
+        LINK = "link"
+        ID = "id"
+        TYPE = "type"

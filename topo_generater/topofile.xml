@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <link_information>
+    <delay>2</delay>
+    <datarate>56</datarate>
+    <mtu>1400</mtu>
+  </link_information>
+  <id_range max="266952" min="266950"/>
+  <host id="266951">
+    <name>Windows-266805</name>
+    <description/>
+    <hypervisor name="xen"/>
+    <vcpu>1</vcpu>
+    <memory>1024</memory>
+    <template id="2"/>
+    <interface boundary="0" id="0">
+      <link type="switch">266950</link>
+      <ip address="default" gateway="default" netmask="default"/>
+    </interface>
+    <os>
+      <type arch="i386" machine="hvm">windows</type>
+    </os>
+    <apps/>
+  </host>
+  <host id="266952">
+    <name>Windows-266807</name>
+    <description/>
+    <hypervisor name="xen"/>
+    <vcpu>1</vcpu>
+    <memory>1024</memory>
+    <template id="2"/>
+    <interface boundary="0" id="0">
+      <link type="switch">266950</link>
+      <ip address="default" gateway="default" netmask="default"/>
+    </interface>
+    <os>
+      <type arch="i386" machine="hvm">windows</type>
+    </os>
+    <apps/>
+  </host>
+  <switch id="266950" type="switch2l">
+    <hypervisor name="xen"/>
+    <interface boundary="0" id="0">
+      <link type="host">266951</link>
+      <ip address="default" netmask="default"/>
+    </interface>
+    <interface boundary="0" id="1">
+      <link type="host">266952</link>
+      <ip address="default" netmask="default"/>
+    </interface>
+  </switch>
+</root>

@@ -5,6 +5,7 @@ import ConfigParser
 from ryu.cmd.manager import main as ryu_manager
 
 import statics as data
+import topo_generater.topo_analyzer as topo
 
 
 def main():
@@ -18,8 +19,12 @@ def main():
         print e
     # add eventlet pool
     pool = eventlet.GreenPool()
+
+    topofile = config.get(data.CONFIG.NETWORK.SECTION_NAME, data.CONFIG.NETWORK.TOPOFILE)
+    pool.spawn(topo.xml_analyzer, topofile)
+
     # start sdn controller
-    pool.spawn(ryu_manager, app_name)
+    # pool.spawn(ryu_manager, app_name)
 
     pool.waitall()
 
