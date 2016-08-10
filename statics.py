@@ -16,6 +16,7 @@ class CONFIG(object):
     class NETWORK(object):
         SECTION_NAME = "network"
         TOPOFILE = "topofile"
+        CONTROLLER = "controller"
 
 
 class TOPO(object):

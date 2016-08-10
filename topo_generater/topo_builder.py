@@ -1,4 +1,8 @@
 from mininet.topo import Topo
+from mininet.net import Mininet
+from mininet.node import RemoteController
+
+from global_data_access.global_net_info import GlobalNetInfo
 
 
 class CustomTopo(Topo):
@@ -14,7 +18,7 @@ class CustomTopo(Topo):
         for device_id, info in topo_info.iteritems():
             # print device_id
             # print info
-            if info["is_switch"]:
+            if not info["is_switch"]:
                 device = self.addHost(info["name"])
             else:
                 device = self.addSwitch(name=info["name"], dpid=info["dpid"])
@@ -22,10 +26,15 @@ class CustomTopo(Topo):
             for link in info["link"]:
                 if set(link) not in link_record:
                     link_record.append(set(link))
-                    
+
         for l in link_record:
             self.addLink(device_record[l.pop()], device_record[l.pop()])
 
 
-def build_topo(topoinfo):
+def build_topo(topoinfo, controller):
     topo = CustomTopo(topoinfo)
+
+    net = Mininet(topo=topo, controller=RemoteController)
+    net.start()
+    gni = GlobalNetInfo.get_instance()
+    gni.store_net(net)

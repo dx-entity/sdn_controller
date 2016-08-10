@@ -6,16 +6,16 @@ import statics as data
 from network_device.device_factory import DeviceFactory
 from topo_builder import build_topo
 
-dpid_begin = 0
+dpid_begin = 10
 
 
-def xml_analyzer(topofile):
+def xml_analyzer(topofile, controller):
     tree = ET.ElementTree(file=topofile)
     host = tree.iter(tag=data.TOPO.TAG.HOST)
     switch = tree.iter(tag=data.TOPO.TAG.SWITCH)
 
     def gen(x, y):
-        return x + y
+        return x[:1] + y
 
     base_info_topo = {}
 
@@ -38,7 +38,7 @@ def xml_analyzer(topofile):
                        "name": dev.get_name(), "is_switch": is_switch, "device_type": device_type}
         base_info_topo[device_id] = device_info
 
-    build_topo(base_info_topo)
+    build_topo(base_info_topo, controller)
 
     return base_info_topo
 
@@ -46,4 +46,4 @@ def xml_analyzer(topofile):
 def dpid_gen():
     global dpid_begin
     dpid_begin += 1
-    return dpid_begin
+    return str(dpid_begin)
