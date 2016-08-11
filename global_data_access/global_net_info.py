@@ -16,3 +16,6 @@ class GlobalNetInfo:
     def store_net(self, net):
         if isinstance(net, Mininet):
             self.net_mapping.append(net)
+
+    def get_net(self):
+        return self.net_mapping if self.net_mapping else None

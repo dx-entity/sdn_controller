@@ -1,6 +1,7 @@
 from mininet.topo import Topo
 from mininet.net import Mininet
 from mininet.node import RemoteController
+from mininet.cli import CLI
 
 from global_data_access.global_net_info import GlobalNetInfo
 
@@ -31,10 +32,15 @@ class CustomTopo(Topo):
             self.addLink(device_record[l.pop()], device_record[l.pop()])
 
 
-def build_topo(topoinfo, controller):
+def build_topo(kwargs):
+    topoinfo = kwargs.get("base_info_topo", None)
+    if not topoinfo:
+        return
     topo = CustomTopo(topoinfo)
 
     net = Mininet(topo=topo, controller=RemoteController)
     net.start()
     gni = GlobalNetInfo.get_instance()
     gni.store_net(net)
+    # if kwargs.get("cli", None):
+    #     CLI(net)

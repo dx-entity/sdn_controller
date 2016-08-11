@@ -27,7 +27,14 @@ def main():
     # start build network
     topofile = config.get(data.CONFIG.NETWORK.SECTION_NAME, data.CONFIG.NETWORK.TOPOFILE)
     controller = config.get(data.CONFIG.NETWORK.SECTION_NAME, data.CONFIG.NETWORK.CONTROLLER)
-    pool.spawn(topo.xml_analyzer, topofile, controller)
+    cli = config.get(data.CONFIG.NETWORK.SECTION_NAME, data.CONFIG.NETWORK.CLI)
+    pool.spawn(topo.xml_analyzer, topofile=topofile, controller=controller, cli=cli)
+
+    # start rest if needed
+    rest = config.get(data.CONFIG.REST.SECION_NAME, data.CONFIG.REST.START_REST)
+    if rest:
+        from rest.wsgi_server import start_rest_server
+        start_rest_server()
 
     pool.waitall()
 

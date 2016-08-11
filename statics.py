@@ -9,18 +9,24 @@ MACTABLE = 2
 FLOODMAC = "ff:ff:ff:ff:ff:ff"
 
 
-class CONFIG(object):
-    class CONTOLLER(object):
+class CONFIG:
+    class CONTOLLER:
         SECTION_NAME = "controller"
         NAME = "name"
-    class NETWORK(object):
+
+    class NETWORK:
         SECTION_NAME = "network"
         TOPOFILE = "topofile"
         CONTROLLER = "controller"
+        CLI = "cli"
+
+    class REST:
+        SECION_NAME = "restful"
+        START_REST = "startrest"
 
 
-class TOPO(object):
-    class TAG(object):
+class TOPO:
+    class TAG:
         HOST = "host"
         SWITCH = "switch"
         INTERFACE = "interface"

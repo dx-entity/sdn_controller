@@ -9,8 +9,11 @@ from topo_builder import build_topo
 dpid_begin = 10
 
 
-def xml_analyzer(topofile, controller):
-    tree = ET.ElementTree(file=topofile)
+def xml_analyzer(**kwargs):
+    if not kwargs.get("topofile", None):
+        print "raise topo file is Null error"
+        return
+    tree = ET.ElementTree(file=kwargs.get("topofile", None))
     host = tree.iter(tag=data.TOPO.TAG.HOST)
     switch = tree.iter(tag=data.TOPO.TAG.SWITCH)
 
@@ -38,7 +41,9 @@ def xml_analyzer(topofile, controller):
                        "name": dev.get_name(), "is_switch": is_switch, "device_type": device_type}
         base_info_topo[device_id] = device_info
 
-    build_topo(base_info_topo, controller)
+    arg = {"base_info_topo":base_info_topo}
+    arg.update(kwargs)
+    build_topo(arg)
 
     return base_info_topo
 
