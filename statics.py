@@ -9,6 +9,14 @@ MACTABLE = 2
 
 FLOODMAC = "ff:ff:ff:ff:ff:ff"
 
+PORTACCESS = "access"
+PORTTRUNK = "trunk"
+PORTHYBRID = "hybrid"
+
+VLANID_NONE = 0
+VLANID_MIN = 2
+VLANID_MAX = 4094
+
 
 class CONFIG:
     class CONTOLLER:

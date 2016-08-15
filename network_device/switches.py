@@ -1,5 +1,6 @@
-from ryu.lib.packet import packet
+from ryu.lib.packet import arp
 from ryu.lib.packet import ethernet
+from ryu.lib.packet import vlan
 
 import statics as data
 import base_device
@@ -17,17 +18,16 @@ class Switch2L(base_device.CustomSwitch):
         pass
 
     def handle_message(self, msg):
-        if PacketClassifier.is_ipv6_packet(msg) or PacketClassifier.is_lldp_msg(msg):
-            return
 
-        if PacketClassifier.is_arp_packet(msg):
-            pass
+        header_list = PacketClassifier.get_header_list(msg)
 
-        if PacketClassifier.is_ipv4_packet(msg):
-            print "ipv4"
+        eth = header_list[ethernet.ethernet.__name__]
 
-        pkt = packet.Packet(msg.data)
-        eth = pkt.get_protocols(ethernet.ethernet)[0]
+        vlan_id = data.VLANID_NONE
+        vlan_header = header_list[vlan.vlan.__name__]
+        if vlan_header:
+            vlan_id = vlan_header.vid
+
         in_port = msg.match["in_port"]
         reason = msg.reason
         table_id = msg.table_id
@@ -79,7 +79,7 @@ class Switch2L(base_device.CustomSwitch):
 
     def init_port(self, ev):
         for p in ev.msg.body:
-            self.port_table[p.port_no] = dict(name=p.name, mac=p.hw_addr)
+            self.port_table[p.port_no] = dict(name=p.name, mac=p.hw_addr, port_type=data.PORTACCESS)
 
 
 class Switch3L(base_device.CustomSwitch):

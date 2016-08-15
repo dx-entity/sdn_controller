@@ -14,6 +14,11 @@ class PacketClassifier(object):
         return eth.ethertype
 
     @staticmethod
+    def get_header_list(msg):
+        pkt = packet.Packet(msg)
+        return dict((p.protocol_name, p) for p in pkt.protocols if type(p) != str)
+
+    @staticmethod
     def is_arp_packet(msg):
         return ether_types.ETH_TYPE_ARP == PacketClassifier._get_eth_header(msg)
 

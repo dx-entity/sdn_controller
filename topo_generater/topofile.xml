@@ -38,6 +38,22 @@
     </os>
     <apps/>
   </host>
+  <host id="266953">
+    <name>Windows-266807</name>
+    <description/>
+    <hypervisor name="xen"/>
+    <vcpu>1</vcpu>
+    <memory>1024</memory>
+    <template id="2"/>
+    <interface boundary="0" id="0">
+      <link type="switch">266950</link>
+      <ip address="default" gateway="default" netmask="default"/>
+    </interface>
+    <os>
+      <type arch="i386" machine="hvm">windows</type>
+    </os>
+    <apps/>
+  </host>
   <switch id="266950" type="switch2l">
     <hypervisor name="xen"/>
     <interface boundary="0" id="0">
@@ -46,6 +62,10 @@
     </interface>
     <interface boundary="0" id="1">
       <link type="host">266952</link>
+      <ip address="default" netmask="default"/>
+    </interface>
+    <interface boundary="0" id="1">
+      <link type="host">266953</link>
       <ip address="default" netmask="default"/>
     </interface>
   </switch>
