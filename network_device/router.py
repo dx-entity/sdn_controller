@@ -14,5 +14,5 @@ class Router(base_device.OFDevice):
     def handle_specific_task(self):
         pass
 
-    def add_default_flow(self):
+    def add_flow(self):
         pass

@@ -75,11 +75,10 @@ class MyDemo(app_manager.RyuApp):
             raise NameError
 
         msg = ev.msg
-
-        device = self.gd.get_device(ev.msg.datapath.id)
+        device = self.gd.get_device(dpid_lib.dpid_to_str(ev.msg.datapath.id))
         if device:
             device.handle_message(msg)
-        PacketRouter.route_pkt(msg)
+        # PacketRouter.route_pkt(msg)
 
     @set_ev_cls(dpset.EventDP, MAIN_DISPATCHER)
     def dp_connect_in(self, ev):
@@ -89,6 +88,8 @@ class MyDemo(app_manager.RyuApp):
         if ev.enter:
             device_type = self.gni.get_device_info(dpid)
             device = DeviceFactory.get_device(device_type)
+            if not device:
+                raise NameError("get no switch")
             device.set_dp(dp)
             device()
             self.gd.register_device(dpid, device)

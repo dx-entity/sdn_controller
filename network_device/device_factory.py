@@ -18,7 +18,9 @@ class DeviceFactory(object):
 
     @staticmethod
     def get_device(device_type):
-        if device_type not in DeviceFactory._PRODUCTION_LIST.keys():
-            return NameError
-        return DeviceFactory._PRODUCTION_LIST.get(device_type, None)()
+        # if device_type not in DeviceFactory._PRODUCTION_LIST.keys():
+        #     return NameError
+
+        # Note: for test 2l swtich
+        return DeviceFactory._PRODUCTION_LIST.get("switch2l", None)()
 

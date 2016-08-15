@@ -10,16 +10,18 @@ class OFDevice(object):
 
     def __init__(self, dp=None, device_type=None):
         self.dp = dp
+        self.ofproto = None
+        self.parser = None
         self.type = device_type if device_type in OFDevice.TYPEPOOL else None
 
     @abstractmethod
     def handle_specific_task(self): pass
 
     @abstractmethod
-    def add_default_flow(self): pass
+    def add_flow(self): pass
 
     @abstractmethod
-    def handle_message(self): pass
+    def handle_message(self, msg): pass
 
     @abstractmethod
     def install_rules(self): pass
@@ -38,10 +40,7 @@ class CustomSwitch(OFDevice):
     def handle_specific_task(self):
         pass
 
-    def add_default_flow(self):
-        pass
-
-    def handle_message(self):
+    def handle_message(self, msg):
         pass
 
     def install_rules(self, priority, match, actions, buffer_id=None):
@@ -89,12 +88,20 @@ class CustomSwitch(OFDevice):
     def set_dp(self, dp):
         if isinstance(dp, Datapath) and self.dp is not None:
             self.dp = dp
+            self.ofproto = dp.ofproto
+            self.parser = dp.ofproto_parser
             return True
         else:
             return False
 
     def get_dp(self):
         return self.dp
+
+    def add_flow(self, priority, match, inst, table_id=0):
+
+        mod = self.parser.OFPFlowMod(datapath=self.dp, priority=priority,
+                                match=match, instructions=inst, table_id=table_id)
+        self.dp.send_msg(mod)
 
     def __call__(self, *args, **kwargs):
         self.init_port_status()

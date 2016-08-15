@@ -42,8 +42,6 @@ class GlobalController(BaseController):
         cmd = kwargs.get("cmd", None)
         nodename = kwargs.get("nodename", None)
         timesout = kwargs.get("timesout", 1000)
-        if "ping" in cmd:
-            print "ping"
         gni = GlobalNetInfo.get_instance()
         res = gni.get_net()
         if not res or not nodename:

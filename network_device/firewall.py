@@ -12,5 +12,5 @@ class Firewall(base_device.OFDevice):
     def handle_message(self):
         pass
 
-    def add_default_flow(self):
+    def add_flow(self):
         pass
