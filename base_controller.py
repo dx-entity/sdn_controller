@@ -33,6 +33,9 @@ from utils.global_data import GlobalData
 from core.flow_manage import FlowManage
 from core.packet_analyser import PacketRouter
 
+from network_device.device_factory import DeviceFactory
+from global_data_access.global_net_info import GlobalNetInfo
+
 
 class MyDemo(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION,
@@ -48,12 +51,23 @@ class MyDemo(app_manager.RyuApp):
 
         self.gd = GlobalData.get_instance()
 
+        self.gni = GlobalNetInfo.get_instance()
+
+    @set_ev_cls(ofp_event.EventOFPPortDescStatsReply, MAIN_DISPATCHER)
+    def handle_port_status(self, ev):
+        dpid = dpid_lib.dpid_to_str(ev.msg.datapath.id)
+        device = self.gd.get_device(dpid)
+        device.init_port(ev)
+
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def handle_switch_features(self, ev):
         if not ev.msg.datapath.ofproto.OFP_VERSION in self.OFP_VERSIONS:
             raise NameError
 
-        FlowManage.get_flow_concoller('add_default_flow')(ev.msg.datapath)
+            # maybe used in other way
+            # FlowManage.get_flow_concoller('add_default_flow')(ev.msg.datapath)
+
+            # dpid = dpid_lib.dpid_to_str(ev.datapath_id)
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def handle_in_packets(self, ev):
@@ -73,8 +87,15 @@ class MyDemo(app_manager.RyuApp):
         dp = ev.dp
         # TODO: classify datapath and init object
         if ev.enter:
-            self.gd.register_device(dpid, dp)
-            self.logger.info("ovs has connected to controller, id: %s" % (dpid))
+            device_type = self.gni.get_device_info(dpid)
+            device = DeviceFactory.get_device(device_type)
+            device.set_dp(dp)
+            device()
+            self.gd.register_device(dpid, device)
+            self.logger.info("ovs has connected to controller, id: %s, device_type: %s" % (dpid, device_type))
         else:
             self.gd.unregister_device(dpid)
-            self.logger.info("ovs has disconnected to controller, id: %s" % (dpid))
+            res, device_type = self.gni.remove_device_info(dpid)
+            if not res:
+                self.logger.error("ovs disconnected id:{0}, but info clean failed".format(dpid))
+            self.logger.info("ovs has disconnected to controller, id: {0}, device_type: {1}".format(dpid, device_type))

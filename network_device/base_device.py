@@ -1,5 +1,7 @@
 from abc import ABCMeta, abstractmethod
 
+from ryu.controller.controller import Datapath
+
 
 class OFDevice(object):
     __metaclass__ = ABCMeta
@@ -19,6 +21,12 @@ class OFDevice(object):
     @abstractmethod
     def handle_message(self): pass
 
+    @abstractmethod
+    def install_rules(self): pass
+
+    @abstractmethod
+    def init_pipeline(self): pass
+
 
 class CustomSwitch(OFDevice):
     def __init__(self, name=None, device_id=None, dp=None, device_type=None):
@@ -34,6 +42,27 @@ class CustomSwitch(OFDevice):
         pass
 
     def handle_message(self):
+        pass
+
+    def install_rules(self, priority, match, actions, buffer_id=None):
+        ofproto = self.dp.ofproto
+        parser = ofproto.ofproto_parser
+
+        inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACIONS,
+                                             actions)]
+
+        mod = parser.OFPFlowMod(datapath=self.dp, priority=priority, match=match, instructions=inst)
+
+        self.dp.send_msg(mod)
+
+    def init_port_status(self):
+        ofp = self.dp.ofproto
+        ofp_parser = self.dp.ofproto_parser
+
+        req = ofp_parser.OFPPortDescStatsRequest(self.dp, 0)
+        self.dp.send_msg(req)
+
+    def init_pipeline(self):
         pass
 
     def set_device_id(self, device_id):
@@ -56,6 +85,20 @@ class CustomSwitch(OFDevice):
 
     def get_dpid(self):
         return self.dpid
+
+    def set_dp(self, dp):
+        if isinstance(dp, Datapath) and self.dp is not None:
+            self.dp = dp
+            return True
+        else:
+            return False
+
+    def get_dp(self):
+        return self.dp
+
+    def __call__(self, *args, **kwargs):
+        self.init_port_status()
+        self.init_pipeline()
 
 
 class TerminalDevice(object):

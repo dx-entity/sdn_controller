@@ -32,15 +32,30 @@ class CustomTopo(Topo):
             self.addLink(device_record[l.pop()], device_record[l.pop()])
 
 
+def register_device(topoinfo):
+    for device_in, info in topoinfo.iteritems():
+        if info["is_switch"]:
+            gni = GlobalNetInfo.get_instance()
+            gni.store_device_info(info["dpid"], info["device_type"])
+
+
+def register_net(net):
+    gni = GlobalNetInfo.get_instance()
+    gni.store_net(net)
+
+
 def build_topo(kwargs):
     topoinfo = kwargs.get("base_info_topo", None)
     if not topoinfo:
         return
     topo = CustomTopo(topoinfo)
+    try:
+        net = Mininet(topo=topo, controller=RemoteController)
+        net.start()
+    except Exception, e:
+        print e
 
-    net = Mininet(topo=topo, controller=RemoteController)
-    net.start()
-    gni = GlobalNetInfo.get_instance()
-    gni.store_net(net)
+    register_net(net)
+    register_device(topoinfo)
     # if kwargs.get("cli", None):
     #     CLI(net)

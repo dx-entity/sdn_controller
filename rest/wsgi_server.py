@@ -33,6 +33,10 @@ def add_url_pattern(handle):
     mapper.connect("global", path_net_node, controller=GlobalController,
                    action='get_net_node', conditions=dict(method=["GET"]))
 
+    path_node_cmd = "/global/net/{nodename}/{cmd}"
+    mapper.connect("global", path_node_cmd, controller=GlobalController,
+                   action='node_cmd', conditions=dict(method=["GET"]))
+
 
 def start_rest_server():
     handle = WSGIApplication()

@@ -1,9 +1,4 @@
-
-from network_device.switches import Switch2L
-
-
 class GlobalData(dict):
-
     _instance = None
 
     def __init__(self):
@@ -18,8 +13,8 @@ class GlobalData(dict):
             GlobalData._instance = GlobalData()
         return GlobalData._instance
 
-    def register_device(self, dpid, dp):
-        self.device_pool[dpid] = Switch2L(dp)
+    def register_device(self, dpid, device):
+        self.device_pool[dpid] = device
 
     def unregister_device(self, dpid):
         dev = self.device_pool.get(dpid, None)

@@ -30,7 +30,6 @@ class GlobalController(BaseController):
 
     @rest_command
     def get_net_node(self, *args, **kwargs):
-        print kwargs
         gni = GlobalNetInfo.get_instance()
         res = gni.get_net()
         node_name = kwargs.get("nodename", None)
@@ -38,4 +37,19 @@ class GlobalController(BaseController):
             return "no net is running"
         return {"node_ip": str(res[0].get(node_name).IP())}
 
-
+    @rest_command
+    def node_cmd(self, *args, **kwargs):
+        cmd = kwargs.get("cmd", None)
+        nodename = kwargs.get("nodename", None)
+        timesout = kwargs.get("timesout", 1000)
+        if "ping" in cmd:
+            print "ping"
+        gni = GlobalNetInfo.get_instance()
+        res = gni.get_net()
+        if not res or not nodename:
+            return "info wrong"
+        node = res[0].get(nodename)
+        data = node.cmd(cmd)
+        if node.waiting:
+            data = self.node.monitor(timesout)
+        return data
