@@ -15,7 +15,7 @@ class PacketClassifier(object):
 
     @staticmethod
     def get_header_list(msg):
-        pkt = packet.Packet(msg)
+        pkt = packet.Packet(msg.data)
         return dict((p.protocol_name, p) for p in pkt.protocols if type(p) != str)
 
     @staticmethod

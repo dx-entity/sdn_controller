@@ -22,7 +22,7 @@ def main():
     pool = eventlet.GreenPool()
 
     # start sdn controller
-    pool.spawn(ryu_manager, app_name)
+    # pool.spawn(ryu_manager, app_name)
 
     # start build network
     topofile = config.get(data.CONFIG.NETWORK.SECTION_NAME, data.CONFIG.NETWORK.TOPOFILE)
@@ -31,7 +31,7 @@ def main():
     pool.spawn(topo.xml_analyzer, topofile=topofile, controller=controller, cli=cli)
 
     # start rest if needed
-    rest = config.get(data.CONFIG.REST.SECION_NAME, data.CONFIG.REST.START_REST)
+    rest = config.get(data.CONFIG.REST.SECION_NAME, data.CONFIG.REST.START_REST) is data.TRUE
     if rest:
         from rest.wsgi_server import start_rest_server
         start_rest_server()

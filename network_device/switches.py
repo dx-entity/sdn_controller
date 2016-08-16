@@ -24,7 +24,7 @@ class Switch2L(base_device.CustomSwitch):
         eth = header_list[ethernet.ethernet.__name__]
 
         vlan_id = data.VLANID_NONE
-        vlan_header = header_list[vlan.vlan.__name__]
+        vlan_header = header_list.get(vlan.vlan.__name__, None)
         if vlan_header:
             vlan_id = vlan_header.vid
 

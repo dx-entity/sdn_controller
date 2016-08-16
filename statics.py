@@ -17,6 +17,9 @@ VLANID_NONE = 0
 VLANID_MIN = 2
 VLANID_MAX = 4094
 
+TRUE = "True"
+FALSE = "False"
+
 
 class CONFIG:
     class CONTOLLER:
